@@ -1,0 +1,31 @@
+<?php
+$currentUrl = $block->getUrl('*/*/*');
+?>
+<div class="dashboard-sidebar" style="background: #2c3e50; color: #ecf0f1; min-height: 500px; padding: 20px 0;">
+    <style>
+        .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+        .sidebar-menu li { padding: 12px 20px; border-left: 4px solid transparent; }
+        .sidebar-menu li:hover { background: #34495e; border-left-color: #3498db; }
+        .sidebar-menu li.active { background: #34495e; border-left-color: #3498db; }
+        .sidebar-menu a { color: #ecf0f1; text-decoration: none; display: block; font-size: 14px; }
+        .sidebar-menu i { margin-right: 10px; }
+    </style>
+    
+    <ul class="sidebar-menu">
+        <li class="<?= (strpos($currentUrl, 'setting') !== false) ? 'active' : '' ?>">
+            <a href="<?= $block->getUrl('dashboard/index/setting') ?>">
+                <i>⚙️</i> Setting
+            </a>
+        </li>
+        <li class="<?= (strpos($currentUrl, 'products') !== false) ? 'active' : '' ?>">
+            <a href="<?= $block->getUrl('dashboard/index/products') ?>">
+                <i>📦</i> Products & Videos
+            </a>
+        </li>
+        <li class="<?= (strpos($currentUrl, 'info') !== false) ? 'active' : '' ?>">
+            <a href="<?= $block->getUrl('dashboard/index/info') ?>">
+                <i>ℹ️</i> Info
+            </a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,152 @@
+<?php
+/** @var \Testing\CustomDashboard\Block\Dashboard $block */
+$products = $block->getProducts();
+
+// echo "Kuldeep Singh";
+// echo "<pre>";
+// print_r($products->getData());
+// die;
+$currentTab = $block->getRequest()->getParam('tab', 'products');
+?>
+
+<div class="dashboard-container">
+    <h1 class="dashboard-title">
+        Products & Videos 
+    </h1>
+
+    <!-- Simple Tabs -->
+    <div class="dashboard-tabs">
+        <a href="<?= $block->getUrl('*/*/*', ['_current' => true, 'tab' => 'products']) ?>" 
+           class="tab-link <?= ($currentTab == 'products') ? 'active' : 'inactive' ?>">
+           📦 Products (<?= $products->count() ?>)
+        </a>
+        <a href="<?= $block->getUrl('*/*/*', ['_current' => true, 'tab' => 'videos']) ?>" 
+           class="tab-link <?= ($currentTab == 'videos') ? 'active' : 'inactive' ?>">
+           🎥 Videos
+        </a>
+    </div>
+
+    <!-- Products Tab -->
+    <?php if ($currentTab == 'products'): ?>
+        <?php if ($products->count() > 0): ?>
+            <div class="products-grid">
+                <?php foreach ($products as $product): ?>
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="<?= $block->getProductImageUrl($product, 220, 180) ?>" 
+                                 alt="<?= $block->escapeHtml($product->getName()) ?>">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">
+                                <?= $block->escapeHtml($product->getName()) ?>
+                            </h3>
+                            <!-- <div class="product-price">
+                                <?//= $block->getFormattedPrice($product->getFinalPrice()) ?>
+                            </div> -->
+                            <button onclick="showProduct(<?= $product->getId() ?>)" 
+                                    class="btn-quick-view">
+                                Quick View
+                            </button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <div class="empty-state">
+                <p>No products found.</p>
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
+
+    <!-- Videos Tab -->
+    <?php if ($currentTab == 'videos'): ?>
+        <div class="empty-state">
+            <p>No videos available yet.</p>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- Popup Modal -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span onclick="closeModal()" class="close-modal">&times;</span>
+        <div id="modalContent" class="modal-body">
+            <div class="loading-spinner"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+function showProduct(productId) {
+    // Show modal
+    document.getElementById('productModal').style.display = 'block';
+    document.getElementById('modalContent').innerHTML = '<div class="loading-spinner"></div>';
+    
+    // Get product details via AJAX
+    fetch('<?= $block->getUrl('dashboard/index/getproduct') ?>?id=' + productId)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            let description = data.description || 'No description available';
+            if (description.length > 200) {
+                description = description.substring(0, 200) + '...';
+            }
+            // <div class="modal-product-image">
+            //     <img src="${data.image}" alt="${data.name}">
+            // </div>
+            // <h2 class="modal-product-title">${data.name}</h2>
+            // <p class="modal-product-price">${data.price}</p>
+            // <p class="modal-product-description">${description}</p>
+            // <div class="modal-actions">
+            //     <a href="${data.url}" class="btn-details">View Details</a>
+            //     <a href="${data.cartUrl}" class="btn-cart">Add to Cart</a>
+            // </div>
+            let html = `
+                <div class="modal-feature-images" style="text-align: center;">
+                    <div class="modal-product-image">
+                        <img src="${data.image}" alt="${data.name}">
+                        <h2 class="modal-product-title">AI Ads Videos</h2>
+                    </div>
+                    <div class="modal-product-image">
+                        <img src="${data.image}" alt="${data.name}">
+                        <h2 class="modal-product-title">Product Showcase Videos</h2>
+                    </div>
+                    <div class="modal-product-image">
+                        <img src="${data.image}" alt="${data.name}">
+                        <h2 class="modal-product-title">Fashion Videos</h2>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalContent').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('modalContent').innerHTML = `
+                <div class="error-state">
+                    <p>Error loading product details. Please try again.</p>
+                    <button onclick="closeModal()" class="btn-details" style="margin-top: 15px;">Close</button>
+                </div>
+            `;
+        });
+}
+
+function closeModal() {
+    document.getElementById('productModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    var modal = document.getElementById('productModal');
+    if (event.target == modal) {
+        closeModal();
+    }
+}
+</script>

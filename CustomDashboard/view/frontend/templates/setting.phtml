@@ -1,0 +1,68 @@
+<?php
+// Debug info hata diya - ab sirf form dikhega
+?>
+<div class="registration-container" style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div class="page-title">
+        <h1 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-bottom: 20px;">
+            <?= __('User Registration') ?>
+        </h1>
+    </div>
+
+    <!-- Success Message (agar ho to) -->
+    <?php if ($this->getRequest()->getParam('success')): ?>
+        <div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+            Registration successful!
+        </div>
+    <?php endif; ?>
+
+    <form method="post" action="<?= $block->getUrl('customer/account/createpost') ?>" 
+          style="background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">
+                First Name <span style="color: #e74c3c;">*</span>
+            </label>
+            <input type="text" name="firstname" required 
+                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">
+                Last Name <span style="color: #e74c3c;">*</span>
+            </label>
+            <input type="text" name="lastname" required 
+                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">
+                Email <span style="color: #e74c3c;">*</span>
+            </label>
+            <input type="email" name="email" required 
+                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">
+                Password <span style="color: #e74c3c;">*</span>
+            </label>
+            <input type="password" name="password" required 
+                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #555;">
+                Confirm Password <span style="color: #e74c3c;">*</span>
+            </label>
+            <input type="password" name="password_confirmation" required 
+                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
+        </div>
+
+        <div style="text-align: center;">
+            <button type="submit" 
+                    style="background: #3498db; color: white; padding: 12px 40px; border: none; border-radius: 4px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                Register
+            </button>
+        </div>
+    </form>
+</div>
