@@ -77,6 +77,8 @@ $currentTab = $block->getRequest()->getParam('tab', 'products');
 </div>
 
 <script>
+var mediaUrl = "<?= $block->getBaseUrl() .'pub/media/' ?>";
+var image = mediaUrl + "custom/ai_ads.png";
 function showProduct(productId) {
     // Show modal
     document.getElementById('productModal').style.display = 'block';
@@ -95,33 +97,20 @@ function showProduct(productId) {
                 throw new Error(data.error);
             }
             
-            let description = data.description || 'No description available';
-            if (description.length > 200) {
-                description = description.substring(0, 200) + '...';
-            }
-            // <div class="modal-product-image">
-            //     <img src="${data.image}" alt="${data.name}">
-            // </div>
-            // <h2 class="modal-product-title">${data.name}</h2>
-            // <p class="modal-product-price">${data.price}</p>
-            // <p class="modal-product-description">${description}</p>
-            // <div class="modal-actions">
-            //     <a href="${data.url}" class="btn-details">View Details</a>
-            //     <a href="${data.cartUrl}" class="btn-cart">Add to Cart</a>
-            // </div>
+            // Update the modal content with clickable images
             let html = `
-                <div class="modal-feature-images" style="text-align: center;">
-                    <div class="modal-product-image">
-                        <img src="${data.image}" alt="${data.name}">
-                        <h2 class="modal-product-title">AI Ads Videos</h2>
+                <div class="modal-feature-images" style="text-align: center; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <div class="modal-product-image" onclick="redirectToVideoGenerate(${productId}, 'ai_ads')" style="cursor: pointer;">
+                        <img src="${image}" alt="ai_ads.png">
+                        <h3 class="modal-product-title" style="margin-top: 10px;">AI Ads Videos</h3>
                     </div>
-                    <div class="modal-product-image">
-                        <img src="${data.image}" alt="${data.name}">
-                        <h2 class="modal-product-title">Product Showcase Videos</h2>
+                    <div class="modal-product-image" onclick="redirectToVideoGenerate(${productId}, 'product_showcase')" style="cursor: pointer;">
+                        <img src="${image}" alt="ai_ads.png">
+                        <h3 class="modal-product-title" style="margin-top: 10px;">Product Showcase Videos</h3>
                     </div>
-                    <div class="modal-product-image">
-                        <img src="${data.image}" alt="${data.name}">
-                        <h2 class="modal-product-title">Fashion Videos</h2>
+                    <div class="modal-product-image" onclick="redirectToVideoGenerate(${productId}, 'fashion')" style="cursor: pointer;">
+                        <img src="${image}" alt="ai_ads.png">
+                        <h3 class="modal-product-title" style="margin-top: 10px;">Fashion Videos</h3>
                     </div>
                 </div>
             `;
@@ -136,6 +125,12 @@ function showProduct(productId) {
                 </div>
             `;
         });
+}
+
+// New function to redirect to video generation page
+function redirectToVideoGenerate(productId, videoType) {
+    closeModal();
+    window.location.href = '<?= $block->getUrl('dashboard/index/videogenerate') ?>?id=' + productId + '&type=' + videoType;
 }
 
 function closeModal() {

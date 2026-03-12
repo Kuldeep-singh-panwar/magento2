@@ -130,7 +130,7 @@
 .modal-content {
     background: white;
     width: 90%;
-    max-width: 600px;
+    max-width: 710px;
     margin: 50px auto;
     padding: 25px;
     border-radius: 10px;
@@ -291,6 +291,36 @@
     text-align: center;
     color: #e74c3c;
     padding: 20px;
+}
+
+.modal-feature-images {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+.modal-product-image {
+    transition: transform 0.3s ease;
+}
+
+.modal-product-image:hover {
+    transform: translateY(-5px);
+}
+
+.modal-product-image img {
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 302px;
+    height: 175px;
+    object-fit: cover;
+}
+
+.modal-product-title {
+    font-size: 16px;
+    color: #333;
+    margin-top: 10px;
 }
 
 /* Responsive Design */

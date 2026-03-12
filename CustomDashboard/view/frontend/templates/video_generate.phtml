@@ -1,0 +1,401 @@
+<?php
+/** @var \Testing\CustomDashboard\Block\Videogenerate $block */
+$product = $block->getProduct();
+$videoType = $block->getVideoType();
+$videoTypes = $block->getVideoTypes();
+$productName = $product ? $product->getName() : 'Product';
+$images = $product->getMediaGalleryImages();
+
+$mediaUrl = $block->getBaseUrl() .'pub/media/';
+$uploadPhImg = $mediaUrl . "custom/upload-icon.png";
+?>
+
+<div class="showcase_main_wrapper">
+    <!--=== Dashboard Section Start ===-->
+    <div class="showcase_dashboard_section">
+        <div class="showcase_main_structure">
+            <div class="showcase_whitelabel_main_wrapper">
+                <form action="" method="post" id="video_generation_form">
+                    <div class="main_flex_wrapper">
+                        <!-- Left Side - Upload Section -->
+                        <div class="showcase_basic_details_parent">
+                            <div class="showcase_upload_logo">
+                                <label>Upload Image</label>
+                                <div class="showcase_uploadImage">
+                                    <div class="showcase_upload cl_uploadnot">
+                                        <input type="file" class="showcase_file_input" id="product_image" 
+                                               name="product_image" onchange="readURL(this)" accept="image/*">
+                                        <div class="showcase_uploadIcon">
+                                            <img class="product_image" src="<?= $uploadPhImg; ?>" 
+                                                 alt="Product Image" data-placeholder="<?= $uploadPhImg; ?>">
+                                        </div>
+                                        <span class="showcase_icondelete deleteProductImage"><svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" fill="#909eb2" enable-background="new 0 0 512.016 512.016" height="18" viewBox="0 0 512.016 512.016" width="18"><g><path d="m448.199 164.387h-236.813l106.048-106.048c5.858-5.858 5.858-15.356 0-21.215l-26.872-26.872c-13.669-13.669-35.831-13.669-49.501 0l-27.63 27.631-14.144-14.144c-15.596-15.597-40.975-15.596-56.572 0l-55.158 55.158c-15.597 15.597-15.597 40.976 0 56.573l14.143 14.144-27.63 27.63c-13.669 13.669-13.669 35.831 0 49.501l26.872 26.872c5.857 5.858 15.356 5.859 21.214 0l38.021-38.021v231.416c0 35.901 29.104 65.005 65.005 65.005h158.012c35.901 0 65.005-29.104 65.005-65.005zm-325.284-35.989-14.143-14.143c-3.899-3.899-3.899-10.244 0-14.144l55.158-55.158c3.9-3.9 10.245-3.899 14.143 0l14.143 14.144zm129.533 299.612c0 8.285-6.716 15.001-15.001 15.001s-15.001-6.716-15.001-15.001v-179.616c0-8.285 6.716-15.001 15.001-15.001s15.001 6.716 15.001 15.001zm66.741 0c0 8.285-6.716 15.001-15.001 15.001s-15.001-6.716-15.001-15.001v-179.616c0-8.285 6.716-15.001 15.001-15.001s15.001 6.716 15.001 15.001zm66.741 0c0 8.285-6.716 15.001-15.001 15.001s-15.001-6.716-15.001-15.001v-179.616c0-8.285 6.716-15.001 15.001-15.001s15.001 6.716 15.001 15.001z"/><path d="m320.898 113.548c-9.151 3.19-15.571 11.361-16.631 20.842h143.932v-24.932c0-17.119-16.845-29.167-33.022-23.682l-93.968 27.672c-.101.029-.211.069-.311.1z"/></g></svg></span>
+                                    </div>
+                                </div>
+                            </div>
+                                
+                            <?php if ($images && $images->getSize() > 0): ?>
+                                <div class="showcase_try_sample">
+                                    <label>Try Sample</label>
+                                    <ul class="product-samples">
+                                        <?php foreach ($images as $image): ?>
+                                        <li>
+                                            <img src="<?= $block->escapeUrl($image->getUrl()) ?>" alt="<?= $block->escapeHtml($productName) ?>" class="sample-image" onclick="selectSampleImage(this)">
+                                        </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
+                            <!-- </div> -->
+
+                            <div class="tabs_wrapper">
+                                <div class="tabs">
+                                    <div class="tab active" data-tab="auto">Auto</div>
+                                    <div class="tab" data-tab="custom">Custom</div>
+                                </div>
+                                
+                                <div id="autoContent">
+                                    <div class="showcase_md_input">
+                                        <label>Just Enter Your Idea</label>
+                                        <input type="text" placeholder="eg: 25 years young female influencer promoting this product" id="custom_idea" name="custom_idea">
+                                    </div>
+                                    <div class="showcase_whitelabel_form_btn">
+                                        <button type="button" class="showcase_btn generate-script-btn" onclick="generateScript()">
+                                            Generate Script
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="customContent" style="display:none;">                               
+                                    <div class="duration_flex_box">
+                                        <div class="showcase_md_input">
+                                            <label>Product Name</label>
+                                            <input type="text" placeholder="Enter product name" id="product_name" name="productName" value="<?= $block->escapeHtml($productName) ?>">
+                                        </div>
+                                        <div class="showcase_md_input">
+                                            <label>Product Target Audience</label>
+                                            <input type="text" placeholder="Enter target audience" id="target_audience" name="productTargetAudience">
+                                        </div>
+                                    </div>
+                                    <div class="duration_flex_box">
+                                        <div class="showcase_md_input">
+                                            <label>Product Selling Point</label>
+                                            <input type="text" placeholder="Enter selling points" id="selling_point" name="productSellingPoint">
+                                        </div>
+                                        <div class="showcase_md_input">
+                                            <label>Product Ad Style</label>
+                                            <input type="text" placeholder="Enter ad style (modern, vintage, etc.)" id="ad_style" name="productAdStyle" value="<?= $block->escapeHtml('UGC Ads') ?>">
+                                        </div>
+                                    </div>
+                                    <div class="duration_radio_button">
+                                        <label>Duration</label>
+                                        <div class="duration-group">
+                                            <input type="radio" id="d10" name="productDuration" class="productDuration" value="10" checked>
+                                            <label for="d10">10 seconds</label>
+                                            <input type="radio" id="d15" name="productDuration" class="productDuration" value="15">
+                                            <label for="d15">15 seconds</label>
+                                        </div>
+                                    </div>
+                                    <div class="showcase_md_input">
+                                        <label>Product Description</label>
+                                        <textarea placeholder="Enter detailed product description" id="product_description" name="product_description" rows="4"></textarea>
+                                    </div>
+
+                                    <div class="showcase_whitelabel_form_btn">
+                                        <button type="button" class="showcase_btn generate-script-btn" onclick="generateScript()">
+                                            Generate Script
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Right Side - Video Generation Form -->
+                        <div class="showcase_basic_details_parent">
+                            <div class="showcase_upload_logo seconduploadimage">                               
+                                <div class="showcase_uploadImage">
+                                    <div class="showcase_upload cl_uploadnot">
+                                        <div class="showcase_uploadIcon">
+                                            <img class="product_image" src="<?= $uploadPhImg ?>" 
+                                                 alt="Product Image" data-placeholder="<?= $uploadPhImg ?>">
+                                        </div>
+                                        <span class="showcase_icondelete deleteProductImage"><svg xmlns="http://www.w3.org/2000/svg" id="Capa_1" fill="#909eb2" enable-background="new 0 0 512.016 512.016" height="18" viewBox="0 0 512.016 512.016" width="18"><g><path d="m448.199 164.387h-236.813l106.048-106.048c5.858-5.858 5.858-15.356 0-21.215l-26.872-26.872c-13.669-13.669-35.831-13.669-49.501 0l-27.63 27.631-14.144-14.144c-15.596-15.597-40.975-15.596-56.572 0l-55.158 55.158c-15.597 15.597-15.597 40.976 0 56.573l14.143 14.144-27.63 27.63c-13.669 13.669-13.669 35.831 0 49.501l26.872 26.872c5.857 5.858 15.356 5.859 21.214 0l38.021-38.021v231.416c0 35.901 29.104 65.005 65.005 65.005h158.012c35.901 0 65.005-29.104 65.005-65.005zm-325.284-35.989-14.143-14.143c-3.899-3.899-3.899-10.244 0-14.144l55.158-55.158c3.9-3.9 10.245-3.899 14.143 0l14.143 14.144zm129.533 299.612c0 8.285-6.716 15.001-15.001 15.001s-15.001-6.716-15.001-15.001v-179.616c0-8.285 6.716-15.001 15.001-15.001s15.001 6.716 15.001 15.001zm66.741 0c0 8.285-6.716 15.001-15.001 15.001s-15.001-6.716-15.001-15.001v-179.616c0-8.285 6.716-15.001 15.001-15.001s15.001 6.716 15.001 15.001zm66.741 0c0 8.285-6.716 15.001-15.001 15.001s-15.001-6.716-15.001-15.001v-179.616c0-8.285 6.716-15.001 15.001-15.001s15.001 6.716 15.001 15.001z"/><path d="m320.898 113.548c-9.151 3.19-15.571 11.361-16.631 20.842h143.932v-24.932c0-17.119-16.845-29.167-33.022-23.682l-93.968 27.672c-.101.029-.211.069-.311.1z"/></g></svg></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="showcase_md_input">
+                                <label>Title</label>
+                                <input type="text" placeholder="Enter video title" id="video_title" name="video_title" value="<?= $block->escapeHtml($productName) ?>">
+                            </div>
+
+                            <div class="showcase_md_input">
+                                <label>Describe scene and environment for your Video</label>
+                                <textarea rows="5" placeholder="Describe the scene, background, mood, lighting, etc." id="scene_description" name="scene_description">A stylish young model wearing a trendy oversized t-shirt</textarea>
+                            </div>
+
+                            <div class="duration_flex_box">
+                                <div class="duration_radio_button">
+                                    <label>Aspect Ratio</label>
+                                    <div class="duration-group">
+                                        <input type="radio" id="aspect_9_16" name="aspect_ratio" value="9:16" checked>
+                                        <label for="aspect_9_16">
+                                            <span class="scPortraitImage scVideoRatio"></span> 9:16
+                                        </label>
+                                        <input type="radio" id="aspect_16_9" name="aspect_ratio" value="16:9">
+                                        <label for="aspect_16_9">
+                                            <span class="scLandScapImage scVideoRatio"></span> 16:9
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="duration_radio_button">
+                                    <label>Duration</label>
+                                    <div class="duration-group">
+                                        <input type="radio" id="duration_10" name="video_duration" class="productDuration" value="10" checked>
+                                        <label for="duration_10">10 seconds</label>
+                                        <input type="radio" id="duration_15" name="video_duration" class="productDuration" value="15">
+                                        <label for="duration_15">15 seconds</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="showcase_whitelabel_form_btn">
+                                <button type="button" class="showcase_btn generate-video-btn" onclick="generateVideo()">
+                                    Generate Video
+                                </button>
+                            </div>
+
+                            <!-- Error Message -->
+                            <div class="error-message" id="errorMessage" style="display: none; color: #dc2626; margin-top: 15px; padding: 10px; background: #fee2e2; border-radius: 8px;">
+                                Prompt API returned an error. Please try again.
+                            </div>
+
+                            <!-- Load Notice -->
+                            <div class="load-notice" style="margin-top: 15px; padding: 10px; background: #fef3c7; color: #92400e; border-radius: 8px; font-size: 13px;">
+                                ⚠️ Sora is currently under heavy load. If generation fails, credits will not be deducted.
+                            </div>
+
+                            <!-- Windows Activation Notice (for demo purposes) -->
+                            <div class="windows-notice" style="margin-top: 15px; padding: 10px; background: #f3f4f6; border-radius: 8px; font-size: 13px; color: #4b5563; display: flex; justify-content: space-between;">
+                                <span>⚠️ Activate Windows</span>
+                                <span>Go to Settings to activate Windows</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+require(['jquery'], function($) {
+    // Tab switching functionality
+    $(".tab").on("click", function() {
+        $(".tab").removeClass("active");
+        $(this).addClass("active");
+
+        if ($(this).data("tab") === "auto") {
+            $("#autoContent").show();
+            $("#customContent").hide();
+        } else {
+            $("#autoContent").hide();
+            $("#customContent").show();
+        }
+    });
+
+    $('.productDuration').on('change', function () {
+        var value = $(this).val();
+        $('.productDuration[value="' + value + '"]').prop('checked', true);
+    });
+
+    $('.deleteProductImage').on('click', function () {      
+        $('#product_image').attr('data-url', '');  
+        $('.product_image').attr('src', '<?= $uploadPhImg;?>');  
+        $('.product_image').attr('src', '<?= $uploadPhImg;?>');  
+    });
+
+    // Handle radio button styling
+    $(".duration-group input[type='radio']").on("change", function() {
+        $(this).closest(".duration-group").find("label").removeClass("checked");
+        $(this).next("label").addClass("checked");
+    });
+});
+
+// Image upload preview
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            jQuery('.product_image').attr('src', e.target.result);
+            jQuery('#product_image').attr('data-url', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Select sample image
+function selectSampleImage(imgElement) {
+    var imgSrc = jQuery(imgElement).attr('src');
+    jQuery('.product_image').attr('src', imgSrc);
+    jQuery('#product_image').attr('data-url', imgSrc);
+    
+    // Optionally trigger any additional events
+    jQuery('#product_image').val(''); // Clear file input as we're using sample
+}
+
+// Generate script function
+function generateScript() {
+    var idea = jQuery('#custom_idea').val();
+    var productName = jQuery('#product_name').val() || '';
+    var productDescription = jQuery('#product_description').val() || '';
+    var productSellingPoint = jQuery('#product_selling_point').val() || '';
+    var productTargetAudience = jQuery('#product_target_audience').val() || 'Young Adults';
+    var productAdStyle = jQuery('#product_ad_style').val() || 'UGC Ads';
+    var productDuration = jQuery('input[name="productDuration"]:checked').val() || '10';
+    var productImage = jQuery('#product_image').attr('data-url');
+    
+    if (!productImage) {
+        alert('Product Image is required.');
+        return;
+    }
+    
+    jQuery('#generateScriptBtn').prop('disabled', true).text('Generating...');
+    var videoType = (jQuery('.tab.active').text() == 'Auto' ? 'aiAdsSora2':'aiAds') // Default agar URL mein na ho
+    
+    // Make AJAX call with type in URL
+    jQuery.ajax({
+        url: '<?= $block->getUrl('dashboard/index/generateprompt') ?>',
+        type: 'POST',
+        data: {
+            extraOptions: {
+                idea: idea,
+                productName: productName,
+                productDescription: productDescription,
+                productSellingPoint: productSellingPoint,
+                productTargetAudience: productTargetAudience,
+                productAdStyle: productAdStyle,
+                productDuration: productDuration,
+            },
+            type: videoType,
+            image: productImage
+            // type yahan nahi bhejna because it's in URL
+        },
+        success: function(response) {            
+            let resp = response.data;
+            if (resp.status) {
+                if(videoType == 'aiAdsSora2'){
+                    jQuery('#scene_description').val(resp.data.script);
+                }else{
+                    var shots = resp.data.shots;
+                    var html = '';
+                    var text = '';
+                    shots.forEach(function(shot, index){
+
+                        text += "Shot " + (index + 1) + "\n";
+                        text += "Duration: [" + shot.duration + "]\n";
+                        text += "Visual Description: " + shot.visualDescription + "\n";
+                        text += "Dialogue: \"" + shot.dialogue + "\"\n\n";
+
+                    });
+                    text += " Keep logo visible and don't destroy it\nDon't add overlay text\nNo text on screen";
+
+                    jQuery('#scene_description').val(text);
+                }
+                jQuery('.tab[data-tab="auto"]').click(); // Switch to auto tab
+                
+                // Show success message
+                if (jQuery('#successMessage').length) {
+                    jQuery('#successMessage').show().text('Script generated successfully!').fadeOut(3000);
+                }
+            } else {
+                if (jQuery('#errorMessage').length) {
+                    jQuery('#errorMessage').show().text(resp.message || 'Failed to generate script');
+                } else {
+                    alert(resp.message || 'Failed to generate script');
+                }
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', error);
+            console.error('Response:', xhr.responseText);
+            
+            var errorMsg = 'Error connecting to server';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMsg = xhr.responseJSON.message;
+            }
+            
+            if (jQuery('#errorMessage').length) {
+                jQuery('#errorMessage').show().text(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        },
+        complete: function() {
+            // Re-enable button
+            jQuery('#generateScriptBtn').prop('disabled', false).text('Generate Script');
+        }
+    });
+}
+
+function generateVideo() {
+
+    var formData = {
+        image: jQuery('#product_image').attr('data-url'),
+        title: jQuery('#video_title').val(),
+        prompt: jQuery('#scene_description').val(),
+        aspectRatio: jQuery('input[name="aspect_ratio"]:checked').val(),
+        duration: jQuery('input[name="video_duration"]:checked').val()       
+    };
+    
+    var productImage = jQuery('#product_image').attr('data-url');
+    
+    if (!productImage) {
+        alert('Product Image is required.');
+        return;
+    }
+
+    // Make AJAX call with type in URL
+    jQuery.ajax({
+        url: '<?= $block->getUrl('dashboard/index/Videogenerate') ?>',
+        type: 'POST',
+        data: formData,
+        success: function(response) {            
+            let resp = response.data;
+            console.log(resp);
+            
+            if (resp.status) {
+                // Show success message
+                if (jQuery('#successMessage').length) {
+                    jQuery('#successMessage').show().text('Script generated successfully!').fadeOut(3000);
+                }
+            } else {
+                if (jQuery('#errorMessage').length) {
+                    jQuery('#errorMessage').show().text(resp.message || 'Failed to generate script');
+                } else {
+                    alert(resp.message || 'Failed to generate script');
+                }
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX Error:', error);
+            console.error('Response:', xhr.responseText);
+            
+            var errorMsg = 'Error connecting to server';
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                errorMsg = xhr.responseJSON.message;
+            }
+            
+            if (jQuery('#errorMessage').length) {
+                jQuery('#errorMessage').show().text(errorMsg);
+            } else {
+                alert(errorMsg);
+            }
+        },
+        complete: function() {
+            // Re-enable button
+            jQuery('#generateScriptBtn').prop('disabled', false).text('Generate Script');
+        }
+    });
+}
+
+
+</script>
